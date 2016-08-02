@@ -1,0 +1,136 @@
+{% include "header.html" %}
+
+{% include "left.html" %}
+    <!--/sidebar-->
+    <div class="main-wrap">
+
+        <div class="crumb-wrap">
+            <div class="crumb-list"><i class="icon-font"></i><a href="/index">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name"><a href="#">设置详情</a></span></div>
+        </div>
+       <!--  <div class="search-wrap">
+            <div class="search-content">
+                <form action="/static/css/admin/design/index" method="post">
+                    <table class="search-tab">
+                        <tr>
+                            <th width="120">选择分类:</th>
+                            <td>
+                                <select name="search-sort" id="">
+                                    <option value="">全部</option>
+                                    <option value="19">精品界面</option><option value="20">推荐界面</option>
+                                </select>
+                            </td>
+                            <th width="70">关键字:</th>
+                            <td><input class="common-text" placeholder="关键字" name="keywords" value="" id="" type="text"></td>
+                            <td><input class="btn btn-primary btn2" name="sub" value="查询" type="submit"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div> -->
+        <div class="result-wrap">
+            
+               <!--  <div class="result-title">
+                    <div class="result-list">
+                        <a href="insert.html"><i class="icon-font"></i>新增作品</a>
+                        <a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>批量删除</a>
+                        <a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a>
+                    </div>
+                </div> -->
+                <div class="result-title">
+                    <div class="result-list">
+                        <a href="/settings/changeset"><i class="icon-font"></i>Proxy settings</a>
+                    </div>
+                </div>
+                <div class="result-content">
+                    <table class="result-tab" width="100%">
+                        <tr>
+                            <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                            <th>ID</th>
+                            <th>address message</th>
+                            <th>proxy address</th>
+                            <th>proxy status</th>
+                            <th>update time</th>
+                            <th>operation</th>
+                        </tr>
+                        <tr>
+                            <td class="tc"><input name="id[]" value="58" type="checkbox"></td>
+                            <td>58</td>
+                            <td title="本地代理" width="20%"><a target="_blank" href="#" title="本地代理">本地代理</a> …
+                            </td>
+                            <td>127.0.0.1:8445</td>
+                            <td><a href="/settings/startproxy">Off</a></td>
+                            <td>2013-12-30 22:34:00</td>
+                            <td>
+                                <a class="link-update" href="#">update</a>
+                                <a class="link-del" href="#">delete</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="list-page"> 1 item 1/1 page</div>
+                </div>
+                <!-- 白名单 White list -->
+                <form name="myform" id="myform" method="post">
+                 <div class="result-title">
+                    <div class="result-list">
+                        <a href="/settings/changeset"><i class="icon-font"></i>White List settings</a>
+                    </div>
+                </div>
+                <div class="result-content">
+                    <table class="result-tab" width="100%">
+                        <tr>
+                            <th>Type</th>
+                            <th>Suffix</th>
+                            <th>Operation</th>
+                        </tr>
+                        <tr>
+                            <td title="White" width="20%"><a target="_blank" href="#" title="White">White List</a>
+                            <td width="70%"><input name="list" value="" type="text" class="common-text required" style="width:90%;aligin:center;"></td>
+                            </td>
+                            <td width="20%">
+                                <a class="link-update" href="#" onclick="">update</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td title="black" width="20%"><a target="_blank" href="#" title="White">Black List</a>
+                            <td width="70%"><input name="list" value="" type="text" class="common-text required" style="width:90%;aligin:center;"></td>
+                            </td>
+                            <td width="20%">
+                                <a class="link-update" href="#" onclick="">update</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="list-page"> 1 item 1/1 page</div>
+                    </form>
+
+                <form name="myform2" id="myform" method="post">
+                 <div class="result-title">
+                    <div class="result-list">
+                        <a href="/settings/changeset"><i class="icon-font"></i>SQLMAP Address</a>
+                    </div>
+                </div>
+                <div class="result-content">
+                    <table class="result-tab" width="100%">
+                        <tr>
+                            <th>ID</th>
+                            <th>sqlmap address</th>
+                            <th>Operation</th>
+                        </tr>
+                        <tr>
+                            <td title="White" width="20%"><a target="_blank" href="#" title="White">White List</a>
+                            <td width="70%"><input name="list" value="" type="text" class="common-text required" style="width:90%;aligin:center;"></td>
+                            </td>
+                            <td width="20%">
+                                <a class="link-update" href="#" onclick="">update</a>
+                                <a class="link-del" href="#">delete</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="list-page"> 1 item 1/1 page</div>
+                    </form>
+                </div>
+        </div>
+    </div>
+    <!--/main-->
+</div>
+</body>
+</html>
