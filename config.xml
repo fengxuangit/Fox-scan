@@ -1,0 +1,14 @@
+<root>
+    <mysql>
+        <host>127.0.0.1</host>
+        <username>root</username>
+        <password>123480</password>
+        <port>3306</port>
+        <database>foxscan</database>
+        <charset>utf8</charset>
+    </mysql>
+    <typelist>
+        <whitelist></whitelist>
+        <blacklist></blacklist>
+    </typelist>
+</root>

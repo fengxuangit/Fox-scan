@@ -14,6 +14,10 @@ app.config.from_envvar('AUTOSQLI_SETTINGS', silent=True)
 
 app.secret_key = "34$#4564dsfaWEERds/*-()^=sadfWE89SA"
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/index')
 def settings_views():
     return render_template('index.html')
@@ -21,7 +25,6 @@ def settings_views():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings_settings_info():
     return render_template('info.html')
-    # if request.method == 'GET':
 
 @app.route('/action/startask', methods=['GET', 'POST'])
 def action_startask():
