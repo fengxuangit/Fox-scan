@@ -9,6 +9,7 @@ use for penetration testing!
 python 2.7 
 Flask
 tornado
+requests
 ```
 
 

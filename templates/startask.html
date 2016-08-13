@@ -7,16 +7,39 @@
             <div class="crumb-list"><i class="icon-font"></i><a href="/index">HOME</a><span class="crumb-step">&gt;</span><span class="crumb-name">TASK Distribute</span></div>
         </div>
         <div class="result-wrap">
-            <form action="" method="post" id="myform" name="myform">
+
                 <div class="config-items">
                     <div class="config-title">
                         <h1><i class="icon-font">&#xe00a;</i>Site information</h1>
                     </div>
-                    <div class="result-content">
+                <div class="result-content">
+                    {% if mode == "startask" %}
+                    <form action="" method="post" id="myform" name="myform">
+
                         <table width="100%" class="insert-tab">
                             <tbody><tr>
                                 <th width="15%"><i class="require-red">*</i>Domain: </th>
-                                <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="keywords" class="common-text"></td>
+                                <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="target"
+                                           class="common-text"></td>
+                            </tr>
+                            <tr>
+                                <th width="15%"><i class="require-green">*</i>Options: </th>
+                                <td>
+                                    <input type="radio" name="getUsers" value="False" class="common-text"
+                                           onclick="setSelectUserNo(this);"/>
+                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getUsers</span>&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" name="isDba" value="False"
+                                           class="common-text" onclick="setSelectUserNo(this);"/>
+                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;isDba</span>&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" name="getTables" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getTables</span>&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" name="getDbs" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getDbs</span>&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" name="getColumns" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getColumns</span>&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" name="dumpTable" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;dumpTable</span>&nbsp;&nbsp;&nbsp;</label>
+                                </td>
                             </tr>
                             <tr>
                                 <th></th>
@@ -26,10 +49,26 @@
                                 </td>
                             </tr>
                             </tbody></table>
+                         </form>
+                    {% else %}
+                    <table width="100%" class="insert-tab">
+                        <tbody>
+                            <tr>
+                                <th width="15%"><i class="require-red">*</i>Domain: </th>
+                                <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="keywords" class="common-text"></td>
+                            </tr>
+                            <tr>
+                                <th width="15%"><i class="require-red">*</i>Operator: </th>
+                                <td>
+                                    <button class="btn btn-primary btn6 mr10" onclick="">status</button>
+                                    <button class="btn btn-primary btn6 mr10" onclick="">STOP</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endif %}
                     </div>
                 </div>
-               
-            </form>
         </div>
     </div>
     <!--/main-->

@@ -9,15 +9,15 @@ from func import XMLDOM
 class MySQLHander(object):
     def __init__(self):
         xml = XMLDOM()
-        host     = xml.GetElementByName('mysql/host')
-        usernmae = xml.GetElementByName('mysql/username')
-        password = xml.GetElementByName('mysql/password')
-        port     = xml.GetElementByName('mysql/port')
-        database = xml.GetElementByName('mysql/database')
-        charset  = xml.GetElementByName('mysql/charset')
+        host     = xml.GetElementByName('mysql/host').strip()
+        username = xml.GetElementByName('mysql/username').strip()
+        password = xml.GetElementByName('mysql/password').strip()
+        port     = xml.GetElementByName('mysql/port').strip()
+        database = xml.GetElementByName('mysql/database').strip()
+        charset  = xml.GetElementByName('mysql/charset').strip()
         try:
             self._conn = MySQLdb.connect(host=host,
-                         port=port, 
+                         port=int(port),
                          user=username,
                          passwd=password,
                          db=database,
@@ -76,7 +76,7 @@ class MySQLHander(object):
 
     def fetchOneRow(self):
         return self._cur.fetchone()
- 
+
     def getRowCount(self):
         return self._cur.rowcount
               
@@ -95,4 +95,6 @@ class MySQLHander(object):
     
     def close(self):
         self.__del__()
- 
+
+class SqlMapTask(object):
+    pass

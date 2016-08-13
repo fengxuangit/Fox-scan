@@ -13,6 +13,7 @@
 .sub-menu li.on a{background: #1963AA;color: #fff;}
 .sub-menu li.on .icon-font{color: #fff;}
 .sub-menu .icon-font{font-size: 11px;}
+.options-font{font-size: larger;font-family: "Microsoft YaHei";}
 /* main */
 .crumb-wrap{height: 40px;line-height: 39px;border-bottom: 1px solid #e5e5e5;background: #f5f5f5;}
 .crumb-list{padding-left: 12px;}

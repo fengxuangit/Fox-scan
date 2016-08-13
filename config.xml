@@ -7,6 +7,9 @@
         <database>foxscan</database>
         <charset>utf8</charset>
     </mysql>
+    <sqlmap>
+        http://127.0.0.1:8775
+    </sqlmap>
     <typelist>
         <whitelist></whitelist>
         <blacklist></blacklist>
