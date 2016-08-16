@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 #!-*- coding:utf-8 -*-
 
+import json
+
 from flask import Flask,render_template,request,session
 
 from libs.action import SqlMapAction
 from libs.func import Tools
+from libs.action import Action
 
 app = Flask(__name__)
 
@@ -35,18 +38,25 @@ def settings_settings_info():
 @app.route('/action/startask', methods=['GET', 'POST'])
 def action_startask():
     if request.method == 'GET':
-        return render_template('startask.html', mode="startask")
+        return render_template('startask.html')
     else:
         taskid = SqlMap.NewTaskId(user="fengxuan", target=request.form['target'])
         if taskid:
             options = Tools.do_sqlmap_options(request.form)
-            SqlMap.Set_Options(taskid=taskid, options=options)
+            if SqlMap.Set_Options(taskid=taskid, options=options):
+                SqlMap.start_scan(taskid, request.form['target'])
+            else:
+                #没有取到服务器地址异常处理。
+                pass
             return "<html><script>alert('success add new target');window.location.href='/action/showtask';</script></html>"
         return "<html><script>alert('add new target Faild');history.back();</script></html>"
 
-@app.route('/action/showtask')
+@app.route('/action/showtask', methods=['GET'])
 def action_showtask():
-    return render_template('startask.html', mode="showtask")
+    data = Action.GetStatus()
+    if request.args.has_key('action') and request.args['action'] == "refresh":
+        return json.dumps(data)
+    return render_template('showtask.html', data=data)
 
 @app.route('/action/status')
 def action_status():

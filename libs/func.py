@@ -2,6 +2,8 @@
 #!-*- coding:utf-8 -*-
 import os
 import logging
+import json
+import base64
 import xml.etree.cElementTree as ET
 
 
@@ -9,7 +11,6 @@ import xml.etree.cElementTree as ET
 def getrootpath():
     path = os.path.split(os.path.realpath(__file__))[0]
     return path[:path.rfind("/")]
-
 
 
 class XMLDOM(object):    
@@ -29,6 +30,14 @@ class Tools:
             if request[key] == "True":
                 options[key] = request[key]
         return options
+
+    @staticmethod
+    def dict2base64(dictobj):
+        return base64.b64encode(json.dumps(dictobj))
+
+    @staticmethod
+    def base642json(string):
+        return json.loads(base64.b64decode(string))
 
 if __name__ == '__main__':
     xml = XMLDOM()
