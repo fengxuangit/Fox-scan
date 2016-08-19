@@ -3,7 +3,7 @@
 
 import json
 
-from flask import Flask,render_template,request,session
+from flask import Flask,render_template,request,session,jsonify
 
 from libs.action import SqlMapAction
 from libs.func import Tools
@@ -53,14 +53,25 @@ def action_startask():
 
 @app.route('/action/showtask', methods=['GET'])
 def action_showtask():
-    data = Action.GetStatus()
+    # data = Action.GetStatus()
     if request.args.has_key('action') and request.args['action'] == "refresh":
+        data = [{'status': "None", 'target':'http://fengxuan.com/sec/sqlidemo.php?id=1', 'success': 1,
+             "taskid":"ssdf21312"},{'status': "None", 'target':'http://baidu.com/index.php?id=1', 'success': 0,
+             "taskid":"grwasafasd"},{'status': "None", 'target':'http://sina.com/index.php?id=1', 'success': 0,
+             "taskid":"grwasafa11as"},{'status': "None", 'target':'http://fuck.com/index.php?id=1', 'success': 1,
+             "taskid":"31231"}]
         return json.dumps(data)
-    return render_template('showtask.html', data=data)
+    return render_template('showtask.html')
 
-@app.route('/action/status')
+@app.route('/action/stoptask')
 def action_status():
-    return render_template('status.html')
+    if request.args['taskidlist'] != "":
+        taskidlist = []
+        if request.args['taskidlist'].find(",") > 0:
+            taskidlist = request.args['taskidlist'].split(',')
+        else:
+            taskidlist.append(request.args['taskidlist'])
+    return json.dumps({"status":SqlMap.StopTask(taskidlist)})
 
 if __name__ == '__main__':
     app.run()

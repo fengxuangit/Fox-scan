@@ -3,8 +3,15 @@
 {% include "left.html" %}
 <!--/sidebar-->
 <script type="text/javascript">
-    var data = {}
-</script>>
+    $().ready(function(){
+        var timer;
+{#        AppendChildStatus(data, $('#status'));#}
+    });
+    setInterval(function(){
+        ajaxGetjson($('#status'));
+    }, 5000);
+
+</script>
     <div class="main-wrap">
         <div class="crumb-wrap">
             <div class="crumb-list"><i class="icon-font"></i><a href="/index">HOME</a><span class="crumb-step">&gt;</span><span class="crumb-name">TASK Distribute</span></div>
@@ -15,25 +22,26 @@
                         <h1><i class="icon-font">&#xe00a;</i>Site information</h1>
                     </div>
                 <div class="result-content">
-                    <table width="100%" class="insert-tab">
-                        <tbody>
-                           <div id="status">
-                            <tr>
-                                <th width="15%"><i class="require-red">*</i>Domain: </th>
-                                <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="keywords" class="common-text"></td>
-                            </tr>
-                            <tr>
-                                <th width="15%"><i class="require-red">*</i>Operator: </th>
-                                <td>
-                                    <button class="btn btn-primary btn6 mr10" onclick="">status</button>
-                                    <button class="btn btn-primary btn6 mr10" onclick="">STOP</button>
-                                </td>
-                            </tr>
-                           </div>
-                        </tbody>
-                    </table>
-                    </div>
+                    <div id="status">
+                        <span><button class="minimal" onclick="STOPALL()">STOPALL</button></span>
+{#                    <table width="100%" class="insert-tab red_tabre">#}
+{#                        <tbody>#}
+{#                            <tr>#}
+{#                                <th width="15%"><i class="require-red">*</i>Domain: </th>#}
+{#                                <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="keywords" class="common-text"></td>#}
+{#                            </tr>#}
+{#                            <tr>#}
+{#                                <th width="15%"><i class="require-red">*</i>Operator: </th>#}
+{#                                <td>#}
+{#                                    <button class="btn btn-primary btn6 mr10" onclick="">status</button>#}
+{#                                    <button class="btn btn-primary btn6 mr10" onclick="">STOP</button>#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        </tbody>#}
+{#                    </table>#}
+                   </div>
                 </div>
+               </div>
         </div>
     </div>
     <!--/main-->

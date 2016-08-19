@@ -85,8 +85,23 @@ class SqlMapAction(object):
         else:
             return False
 
-class Action:
+    def StopTask(self, tasklist):
+        if isinstance(tasklist, list) == False:
+            return False
+        return True
+        flag = True
+        for taskid in tasklist:
+            server = self._get_server(taskid)
+            url = "{0}/scan/{1}/stop".format(server, taskid)
+            response = json.loads(requests.get(url,None).text)
+            if requests['success'] == True:
+                print "[!] stop task {0} ok!".format(taskid)
+            else:
+                flag = False
+                print "[!] stop task {0} failed!".format(taskid)
+        return flag
 
+class Action:
     @staticmethod
     def SaveData(target, data):
         sql = ""
