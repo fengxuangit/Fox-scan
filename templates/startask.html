@@ -2,58 +2,97 @@
 
 {% include "left.html" %}
 <!--/sidebar-->
-    <div class="main-wrap">
-        <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font"></i><a href="/index">HOME</a><span class="crumb-step">&gt;</span><span class="crumb-name">TASK Distribute</span></div>
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list"><i class="icon-font"></i><a href="/index">HOME</a><span class="crumb-step">&gt;</span><span class="crumb-name">TASK Distribute</span></div>
+    </div>
+    <div class="result-wrap">
+
+    <div class="config-items">
+        <div class="config-title">
+            <h1><i class="icon-font">&#xe00a;</i>Site information</h1>
         </div>
-        <div class="result-wrap">
+    <div class="result-content">
+        <form action="" method="post" id="myform" name="myform">
 
-                <div class="config-items">
-                    <div class="config-title">
-                        <h1><i class="icon-font">&#xe00a;</i>Site information</h1>
-                    </div>
-                <div class="result-content">
-                    <form action="" method="post" id="myform" name="myform">
-
-                        <table width="100%" class="insert-tab">
-                            <tbody><tr>
-                                <th width="15%"><i class="require-red">*</i>Domain: </th>
-                                <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="target"
-                                           class="common-text"></td>
-                            </tr>
-                            <tr>
-                                <th width="15%"><i class="require-green">*</i>Options: </th>
-                                <td>
-                                    <input type="radio" name="getUsers" value="False" class="common-text"
-                                           onclick="setSelectUserNo(this);"/>
-                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getUsers</span>&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="isDba" value="False"
-                                           class="common-text" onclick="setSelectUserNo(this);"/>
-                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;isDba</span>&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="getTables" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
-                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getTables</span>&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="getDbs" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
-                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getDbs</span>&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="getColumns" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
-                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;getColumns</span>&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" name="dumpTable" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
-                                    <label><span class="options-font">&nbsp;&nbsp;&nbsp;dumpTable</span>&nbsp;&nbsp;&nbsp;</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <td>
-                                    <input type="submit" value="FUCK It" class="btn btn-primary btn6 mr10">
-                                    <input type="button" value="BACK" onclick="history.go(-1)" class="btn btn6">
-                                </td>
-                            </tr>
-                            </tbody></table>
-                         </form>
-                    </div>
-                </div>
+            <table width="100%" class="insert-tab">
+                <tbody>
+                <tr>
+                    <th width="15%"><i class="require-red">*</i>Domain: </th>
+                    <td><input type="text" id="" value="http://www.evalshell.com" size="85" name="target"
+                               class="common-text"></td>
+                </tr>
+                <tr>
+                    <th width="15%"><i class="require-green">*</i>Mode: </th>
+                    <td><input type="radio" value="0" class="common-text" onclick="ModeChange(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;active</span>&nbsp;&nbsp;
+                            &nbsp;</label>
+                    <input type="radio" value="1"  class="common-text" onclick="ModeChange(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;passive</span>&nbsp;&nbsp;
+                            &nbsp;</label>
+                    </td>
+                </tr>
+                    <tr class="passive">
+                         <th width="15%">SqlMap address: </th>
+                        <td>
+                        <input type="text" id="" value="http://127.0.0.1:8775" size="85" name="sqlmapaddress"
+                               class="common-text">
+                        </td>
+                    </tr>
+                    <tr class="passive">
+                        <th width="15%">Write List: </th>
+                        <td>
+                        <input type="text" id="" value="php,asp,aspx,jsp,jspx" size="85" name="writelist[]"
+                               class="common-text">
+                        </td>
+                    </tr>
+                    <tr class="passive">
+                        <th width="15%">Black List: </th>
+                        <td>
+                        <input type="text" value="ico,flv,.js,css,jpg,png,jpeg,gif,pdf,ss3,txt,rar,zip,avi,mp4,swf,wmi,exe,mpeg"
+                               size="85" name="blacklist[]"
+                               class="common-text">
+                        </td>
+                    </tr>
+                    <tr class="passive">
+                        <th width="15%">Proxy Address: </th>
+                        <td>
+                        <input type="text" value="http://127.0.0.1:8081" size="85" name="proxyadr"
+                               class="common-text">
+                        </td>
+                    </tr>
+                <tr>
+                    <th width="15%"><i class="require-green">*</i>Options: </th>
+                    <td>
+                        <input type="radio" name="getUsers" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;getUsers</span>&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" name="isDba" value="False" class="common-text"
+                               onclick="setSelectUserNo(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;isDba</span>&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" name="getTables" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;getTables</span>&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" name="getDbs" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;getDbs</span>&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" name="getColumns" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;getColumns</span>&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" name="dumpTable" value="False" class="common-text" onclick="setSelectUserNo(this);"/>
+                        <label><span class="options-font">&nbsp;&nbsp;&nbsp;dumpTable</span>&nbsp;&nbsp;&nbsp;</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="submit" value="FUCK It" class="btn btn-primary btn6 mr10">
+                        <input type="button" value="BACK" onclick="history.go(-1)" class="btn btn6">
+                    </td>
+                </tr>
+                </tbody></table>
+             </form>
         </div>
     </div>
-    <!--/main-->
+    </div>
+</div>
+<!--/main-->
 </div>
 </body>
 </html>

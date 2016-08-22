@@ -1,11 +1,22 @@
 #!/usr/bin/env python
 #!-*- coding:utf-8 -*-
+
 import os
+import sys
 import logging
 import json
 import base64
+import requests
+import urllib2
+import ssl
+# from models import MySQLHander
 import xml.etree.cElementTree as ET
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.poolmanager import PoolManager
 
+
+SPIDER_HEADER = {"User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko)" \
+                " Version/6.0 Mobile/10A5376e Safari/8536.25"}
 
 
 def getrootpath():
@@ -21,6 +32,13 @@ class XMLDOM(object):
     def GetElementByName(self, name):
         return self.tree.find(name).text
 
+#ensure HTTPAdapter to spider https
+class MyAdapter(HTTPAdapter):
+    def init_poolmanager(self, connections, maxsize, block=False):
+        self.poolmanager = PoolManager(num_pools=connections,
+                                       maxsize=maxsize,
+                                       block=block,
+                                       ssl_version=ssl.PROTOCOL_TLSv1)
 class Tools:
 
     @staticmethod
@@ -39,6 +57,8 @@ class Tools:
     def base642json(string):
         return json.loads(base64.b64decode(string))
 
+
+
 if __name__ == '__main__':
-    xml = XMLDOM()
-    print xml.GetElementByName('sqlmap').strip()
+    t = Tools()
+    t.SpiderGetLink("http://fengxuan.com/webapp/discuz2.5/forum.php")

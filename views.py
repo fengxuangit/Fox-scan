@@ -73,5 +73,6 @@ def action_status():
             taskidlist.append(request.args['taskidlist'])
     return json.dumps({"status":SqlMap.StopTask(taskidlist)})
 
+
 if __name__ == '__main__':
     app.run()

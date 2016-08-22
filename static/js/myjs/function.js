@@ -17,7 +17,7 @@ var ChildDemo = "<p></p><table width='100%' class='insert-tab{2}'>" +
             "</td></tr></tbody></table>";
 
 function setSelectUserNo(radioObj){
-    var radioCheck= $(raioObj).val();
+    var radioCheck= radioObj.value;
     if("True"==radioCheck){
         $(radioObj).attr("checked",false);
         $(radioObj).val("False");
@@ -70,4 +70,16 @@ function STOPALL() {
             }
         }
     })
+}
+
+function ModeChange(obj) {
+    num = obj.value;
+    if (num == 0){
+        //active
+        $('.passive').hide();
+    }else if(num == 1){
+        $('.passive').show();
+    }
+    $(obj).attr("checked",true);
+    $(obj).closest('radio').attr("checked", false);
 }

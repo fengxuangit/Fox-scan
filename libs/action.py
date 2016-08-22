@@ -4,11 +4,14 @@ import json
 import time
 import sys
 import requests
+import re
+import urllib2
 import base64
 import threading
 import ipdb
-
-from func import XMLDOM,Tools
+from urlparse import urlparse
+from func import XMLDOM,Tools,SPIDER_HEADER
+from bs4 import BeautifulSoup
 from models import MySQLHander
 
 HEADER={'Content-Type': 'application/json'}
@@ -136,6 +139,40 @@ class Action:
             data.append(result)
         return data
 
+
+class Spider(object):
+    def SpiderGetLink(self, url):
+        content = requests.get(url, headers=SPIDER_HEADER).text
+        self.Analysis(content)
+
+    def Analysis(self, content):
+        def fuckotherdomain(domain):
+            flag = re.search('http(?:s){0,1}//', link)
+            if flag and link.find(rootdomain) >= 0:
+                return domain
+            return None
+        soup = BeautifulSoup(content, "lxml")
+        sql = "select writelist,blacklist,rootdomain from settings where taskid=\"{0}\"".format(taskid)
+        mysql.query(sql)
+        whitelist,blacklist,rootdomain = list(mysql.fetchOneRow())
+        result = []
+        for a in soup.find_all('a'):
+            flag = False
+            link = urlparse(a['href'])
+            #Matching white list first首先匹配白名单
+            for types in whitelist:
+                if link.path.find(types) >= 0:
+                    result.append(a['href']) if fuckotherdomain(a['href'])!=None else pass
+            #Matching white list Second首先匹配黑名单
+            for types in blacklist:
+                if link.path.find(types):
+                    flag = True
+            #if match blacklist then continue匹配到黑名单就推出
+            if flag:
+                continue
+            result.append(a['href']) if fuckotherdomain(a['href'])!=None else pass
+                        
+
 def Thread_Handle(taskid, target):
     lock.acquire()
     sql = SqlMapAction()
@@ -157,4 +194,5 @@ def Thread_Handle(taskid, target):
     return True
 
 if __name__ == '__main__':
-    Action.GetStatus("19f4cc8df5166df3")
+    s = Spider()
+    s.SpiderGetLink("http://fengxuan.com/webapp/discuz2.5/forum.php")

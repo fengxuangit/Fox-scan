@@ -10,6 +10,7 @@ python 2.7
 Flask
 tornado
 requests
+BeautifulSoup 4.2.0
 ```
 
 
