@@ -2,6 +2,10 @@
 
 {% include "left.html" %}
 <!--/sidebar-->
+<script type="text/javascript">
+    // $('.myform').submit(function (){
+    // });
+</script>
 <div class="main-wrap">
     <div class="crumb-wrap">
         <div class="crumb-list"><i class="icon-font"></i><a href="/index">HOME</a><span class="crumb-step">&gt;</span><span class="crumb-name">TASK Distribute</span></div>
@@ -14,7 +18,7 @@
         </div>
     <div class="result-content">
         <form action="" method="post" id="myform" name="myform">
-
+            <input type="hidden" name="rootdomain" value="">
             <table width="100%" class="insert-tab">
                 <tbody>
                 <tr>
@@ -35,14 +39,14 @@
                     <tr class="passive">
                          <th width="15%">SqlMap address: </th>
                         <td>
-                        <input type="text" id="" value="http://127.0.0.1:8775" size="85" name="sqlmapaddress"
+                        <input type="text" id="" value="http://127.0.0.1:8775" size="85" name="sqlmapaddr"
                                class="common-text">
                         </td>
                     </tr>
                     <tr class="passive">
                         <th width="15%">Write List: </th>
                         <td>
-                        <input type="text" id="" value="php,asp,aspx,jsp,jspx" size="85" name="writelist[]"
+                        <input type="text" id="" value="php,asp,aspx,jsp,jspx" size="85" name="writelist"
                                class="common-text">
                         </td>
                     </tr>
@@ -50,14 +54,14 @@
                         <th width="15%">Black List: </th>
                         <td>
                         <input type="text" value="ico,flv,.js,css,jpg,png,jpeg,gif,pdf,ss3,txt,rar,zip,avi,mp4,swf,wmi,exe,mpeg"
-                               size="85" name="blacklist[]"
+                               size="85" name="blacklist"
                                class="common-text">
                         </td>
                     </tr>
                     <tr class="passive">
                         <th width="15%">Proxy Address: </th>
                         <td>
-                        <input type="text" value="http://127.0.0.1:8081" size="85" name="proxyadr"
+                        <input type="text" value="http://127.0.0.1:8081" size="85" name="proxyaddr"
                                class="common-text">
                         </td>
                     </tr>

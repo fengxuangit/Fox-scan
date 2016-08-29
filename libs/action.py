@@ -10,7 +10,7 @@ import base64
 import threading
 import ipdb
 from urlparse import urlparse
-from func import XMLDOM,Tools,SPIDER_HEADER
+from func import XMLDOM,Tools,SPIDER_HEADER,getrootdomain,assertparams
 from bs4 import BeautifulSoup
 from models import MySQLHander
 
@@ -32,7 +32,7 @@ class SqlMapAction(object):
         self.address = xml.GetElementByName('sqlmap').strip()
 
     def _get_server(self, taskid):
-        sql = "select server from task where taskid = \"{0}\"".format(taskid)
+        sql = "select server from settings where id = 1"
         self.db.query(sql)
         server = self.db.fetchOneRow()[0]
         if server == None:
@@ -46,8 +46,8 @@ class SqlMapAction(object):
         if response['success']:
             db = MySQLHander()
             taskid = response['taskid']
-            sql = "insert into task(`user`, `target`, `taskid`, `server`) VALUES (\"{0}\", \"{1}\", \"{2}\", \"{3}\")"\
-            .format(kwargs['user'], kwargs['target'], taskid, self.address)
+            sql = "insert into task(`target`, `taskid`, `server`) VALUES (\"{0}\", \"{1}\", \"{2}\")"\
+            .format(kwargs['target'], taskid, self.address)
             if db.insert(sql) == 0L:
                 print "Apply New TaskId Success!"
             else:
@@ -74,6 +74,12 @@ class SqlMapAction(object):
         else:
             return False
 
+    def update_settings(self, kwargs):
+        sql = "update settings set server=\"{0}\", writelist=\"{1}\", blacklist=\"{2}\", proxyaddr=\"{3}\"," \
+              "rootdomain=\"{4}\" where id=1".format(kwargs['sqlmapaddr'], kwargs['writelist'],\
+        kwargs['blacklist'], kwargs['proxyaddr'], getrootdomain(kwargs['target']))
+        mysql.update(sql)
+
     def start_scan(self, taskid, target):
         server = self._get_server(taskid)
         url = "{0}/scan/{1}/start".format(server, taskid)
@@ -83,6 +89,7 @@ class SqlMapAction(object):
             print "[!] start task {0} sucess".format(taskid)
             t = threading.Thread(target=Thread_Handle,args=(taskid,target,))
             taskid_thread_Dict.append(taskid)
+            t.setDaemon(True)
             t.start()
             return True
         else:
@@ -102,14 +109,29 @@ class SqlMapAction(object):
             else:
                 flag = False
                 print "[!] stop task {0} failed!".format(taskid)
-        return flag
+        return flag      
+
+    def Start_Spider(self, taskid, target):
+        t = threading.Thread(target=Spider_Handle,args=(taskid,target,))
+        t.start()
+
+    def DeleteAllTask(self):
+        sql = "select target,data from task where success=1"
+        mysql.query(sql)
+        slist = mysql.fetchAllRows()
+        for line in slist:
+            sql = "insert into successlist(`target` ,`data`) values (\"{0}\")".format(line[0], line[1])
+            mysql.insert(sql)
+        sql = "delete from task"
+        mysql.update(sql)
+        print "[!] task schedule has been clear!"
 
 class Action:
     @staticmethod
     def SaveData(target, data):
         sql = ""
-        if len(data) == 0:
-            sql = "update task set success=0 where target={1}".format(target)
+        if len(data['data']) == 0:
+            sql = "update task set success=0 where target=\"{0}\"".format(target)
         else:
             sql = "update task set data=\"{0}\",success=1 where target=\"{1}\"".format(\
                 Tools.dict2base64(data['data'][0]['value'][0]['data']), target)
@@ -143,35 +165,55 @@ class Action:
 class Spider(object):
     def SpiderGetLink(self, url):
         content = requests.get(url, headers=SPIDER_HEADER).text
-        self.Analysis(content)
+        seturl =  self.Analysis(url, content)
+        return seturl
 
-    def Analysis(self, content):
-        def fuckotherdomain(domain):
-            flag = re.search('http(?:s){0,1}//', link)
-            if flag and link.find(rootdomain) >= 0:
-                return domain
+    def Analysis(self, url, content):
+        result = set()
+        #判断是否是同源网站
+        def fuckotherdomain(href, rootdomain):
+            if href.find(rootdomain) >= 0:
+                return href
             return None
+        #如果以http开头就返回整个链接，否则就拼接URL
+        def geturl(url, href):
+            if href.startswith('http'):
+                return href
+            elif assertparams(href):
+                url = urlparse(url)
+                return "{0}://{1}/{2}/{3}".format(url.scheme, url.netloc, url.path, href)
         soup = BeautifulSoup(content, "lxml")
-        sql = "select writelist,blacklist,rootdomain from settings where taskid=\"{0}\"".format(taskid)
+        #得到设置信息表
+        sql = "select writelist,blacklist,rootdomain from settings where id=1"
         mysql.query(sql)
         whitelist,blacklist,rootdomain = list(mysql.fetchOneRow())
-        result = []
         for a in soup.find_all('a'):
+            #将a标签中的值挨个取出来
+            href = a['href']
+            if assertparams(href):
+                if href.startswith('http'):
+                    if fuckotherdomain(href, rootdomain) != None:
+                        pass
+                    else:
+                        continue
+            else:
+                continue
             flag = False
-            link = urlparse(a['href'])
-            #Matching white list first首先匹配白名单
-            for types in whitelist:
+            link = urlparse(href)
+            #Matching white list first 首先匹配白名单,如果匹配到那么就优先添加
+            for types in whitelist.split(','):
                 if link.path.find(types) >= 0:
-                    result.append(a['href']) if fuckotherdomain(a['href'])!=None else pass
-            #Matching white list Second首先匹配黑名单
-            for types in blacklist:
-                if link.path.find(types):
+                    result.add(geturl(url, href))
+            #Matching white list Second 首先匹配黑名单
+            for types in blacklist.split(','):
+                if link.path.find(types) >=0:
                     flag = True
-            #if match blacklist then continue匹配到黑名单就推出
+            #if match blacklist then continue 匹配到黑名单就推出
             if flag:
                 continue
-            result.append(a['href']) if fuckotherdomain(a['href'])!=None else pass
-                        
+            result.add(geturl(url, href))
+        return result
+
 
 def Thread_Handle(taskid, target):
     lock.acquire()
@@ -193,6 +235,25 @@ def Thread_Handle(taskid, target):
     lock.release()
     return True
 
+def Spider_Handle(target, options={}):
+    # lock.acquire()
+    result = set()
+    spider = Spider()
+    #得到页面的链接
+    result = spider.SpiderGetLink(target)
+    result.add(target)
+    saction = SqlMapAction()
+    for url in result:
+        taskid = saction.NewTaskId(user="fengxuan", target=url)
+        if taskid:
+            saction.Set_Options(taskid=taskid, options=options)
+            saction.start_scan(taskid, target)
+    # lock.release()
+
 if __name__ == '__main__':
-    s = Spider()
-    s.SpiderGetLink("http://fengxuan.com/webapp/discuz2.5/forum.php")
+    t = threading.Thread(target=Spider_Handle,args=("http://fengxuan.com/webapp/discuz2.5/forum.php",))
+    t.start()
+    t.join()
+    # s = Spider()
+    # s.SpiderGetLink("http://fengxuan.com/webapp/discuz72/")
+    # Spider_Handle("http://fengxuan.com//webapp/discuz72/", {})

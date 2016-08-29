@@ -29,7 +29,11 @@ function setSelectUserNo(radioObj){
 
 function AppendChildStatus(data, obj){
     var child = ChildDemo.concat();
-    $.each(data, function(n, value){
+    //当返回的任务数大于现在的数据时候才改变。
+    if (parseInt($('#tasknum').html()) < parseInt(data['number'])){
+        $('#tasknum').html(data['number']);
+    }
+    $.each(data['data'], function(n, value){
         if (taskid_dict.indexOf(value['taskid']) > -1){
             return false;
         }
@@ -38,7 +42,6 @@ function AppendChildStatus(data, obj){
         }else{
             obj.after(child.format(value['target'], value['taskid'], ""));
         }
-
         taskid_dict.push(value['taskid']);
     });
 }
@@ -75,7 +78,6 @@ function STOPALL() {
 function ModeChange(obj) {
     num = obj.value;
     if (num == 0){
-        //active
         $('.passive').hide();
     }else if(num == 1){
         $('.passive').show();
@@ -83,3 +85,10 @@ function ModeChange(obj) {
     $(obj).attr("checked",true);
     $(obj).closest('radio').attr("checked", false);
 }
+
+
+function getRootDomain(domain){
+    var repartten = /http[s]{0,1}:\/\/(.*?)\//i
+    return domain.match(repartten)
+}
+

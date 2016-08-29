@@ -2,14 +2,18 @@
 #!-*- coding:utf-8 -*-
 
 import json
+import threading
 
 from flask import Flask,render_template,request,session,jsonify
 
-from libs.action import SqlMapAction
+from libs.action import SqlMapAction,Spider_Handle
 from libs.func import Tools
+from libs.models import MySQLHander
 from libs.action import Action
 
 app = Flask(__name__)
+
+mysql = MySQLHander()
 
 app.config.update(dict(
     DEBUG=True,
@@ -40,26 +44,38 @@ def action_startask():
     if request.method == 'GET':
         return render_template('startask.html')
     else:
-        taskid = SqlMap.NewTaskId(user="fengxuan", target=request.form['target'])
-        if taskid:
-            options = Tools.do_sqlmap_options(request.form)
-            if SqlMap.Set_Options(taskid=taskid, options=options):
-                SqlMap.start_scan(taskid, request.form['target'])
-            else:
-                #没有取到服务器地址异常处理。
-                pass
-            return "<html><script>alert('success add new target');window.location.href='/action/showtask';</script></html>"
-        return "<html><script>alert('add new target Faild');history.back();</script></html>"
+        #删除之前的任务
+        SqlMap.DeleteAllTask()
+        #转换为sqlmap的设置
+        options = Tools.do_sqlmap_options(request.form)
+        #更新整体的设置
+        SqlMap.update_settings(request.form)
+        #线程启动任务，后台运行,没有join
+        # Spider_Handle(request.form['target'],options)
+        t = threading.Thread(target=Spider_Handle,args=(request.form['target'],options,))
+        t.start()
+        t.join()
+        return "<html><script>alert('success add new target');window.location.href='/action/showtask';</script></html>"
+    return "<html><script>alert('add new target Faild');history.back();</script></html>"
 
 @app.route('/action/showtask', methods=['GET'])
 def action_showtask():
-    # data = Action.GetStatus()
+    data = {"number":0, "data":[]}
     if request.args.has_key('action') and request.args['action'] == "refresh":
-        data = [{'status': "None", 'target':'http://fengxuan.com/sec/sqlidemo.php?id=1', 'success': 1,
-             "taskid":"ssdf21312"},{'status': "None", 'target':'http://baidu.com/index.php?id=1', 'success': 0,
-             "taskid":"grwasafasd"},{'status': "None", 'target':'http://sina.com/index.php?id=1', 'success': 0,
-             "taskid":"grwasafa11as"},{'status': "None", 'target':'http://fuck.com/index.php?id=1', 'success': 1,
-             "taskid":"31231"}]
+        condition = ""
+        sql = "select taskid,target,success from task where action=0"
+        mysql.query(sql)
+        #获取正在扫描的URL
+        num = 0
+        for line in mysql.fetchAllRows():
+            num += 1
+            data['data'].append({"taskid":line[0], "target":line[1], "success":line[2]})
+            condition = "taskid = \"{0}\" and ".format(line[0])
+        #更新状态,下次就不取ACTION为1的了。
+        # if condition != "":
+        #     sql = "update task set action=1 where {0}".format(condition[:-4])
+        #     mysql.update(sql)
+        data['number'] = num
         return json.dumps(data)
     return render_template('showtask.html')
 

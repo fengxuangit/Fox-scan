@@ -9,7 +9,9 @@ import base64
 import requests
 import urllib2
 import ssl
+from urlparse import urlparse
 # from models import MySQLHander
+import re
 import xml.etree.cElementTree as ET
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
@@ -23,8 +25,20 @@ def getrootpath():
     path = os.path.split(os.path.realpath(__file__))[0]
     return path[:path.rfind("/")]
 
+def getrootdomain(domain):
+    pattern = re.compile('http[s]{0,1}://(.*?)/')
+    flag = pattern.search(domain)
+    if flag:
+        return flag.groups()[0]
+    return None
 
-class XMLDOM(object):    
+def assertparams(url):
+    if urlparse(url).query == "":
+        return False
+    return True
+
+
+class XMLDOM(object):
     def __init__(self):
         xml = ET.parse("{0}/config.xml".format(getrootpath()))
         self.tree = xml.getroot()
@@ -40,7 +54,9 @@ class MyAdapter(HTTPAdapter):
                                        block=block,
                                        ssl_version=ssl.PROTOCOL_TLSv1)
 class Tools:
-
+    '''
+    将request请求对象转换为SQLMAP的设置值
+    '''
     @staticmethod
     def do_sqlmap_options(request):
         options = {}
@@ -60,5 +76,5 @@ class Tools:
 
 
 if __name__ == '__main__':
-    t = Tools()
-    t.SpiderGetLink("http://fengxuan.com/webapp/discuz2.5/forum.php")
+    print getrootdomain("http://www.108js.com/article/article1/10025.html?id=58")
+

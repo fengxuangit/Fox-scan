@@ -40,6 +40,7 @@ class MySQLHander(object):
 
 
     def query(self,sql):
+        print "----\nsql: ", sql
         try:
             self._cur.execute("SET NAMES utf8")
             result = self._cur.execute(sql)
