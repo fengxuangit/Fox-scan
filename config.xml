@@ -11,7 +11,7 @@
         http://127.0.0.1:8775
     </sqlmap>
     <typelist>
-        <whitelist></whitelist>
-        <blacklist></blacklist>
+        <whitelist>.php,.asp,.aspx,.jsp,.jspx</whitelist>
+        <blacklist>.ico,.flv,.js,.css,.jpg,.png,.jpeg,.gif,.pdf,.ss3,.txt,.rar,.zip,.avi,.mp4,.swf,.wmi,.exe,.mpeg</blacklist>
     </typelist>
 </root>

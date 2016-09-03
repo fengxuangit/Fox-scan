@@ -32,11 +32,6 @@ def getrootdomain(domain):
         return flag.groups()[0]
     return None
 
-def assertparams(url):
-    if urlparse(url).query == "":
-        return False
-    return True
-
 
 class XMLDOM(object):
     def __init__(self):
@@ -72,7 +67,6 @@ class Tools:
     @staticmethod
     def base642json(string):
         return json.loads(base64.b64decode(string))
-
 
 
 if __name__ == '__main__':

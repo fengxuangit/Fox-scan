@@ -8,12 +8,13 @@ String.prototype.format=function(){
 var taskid_dict = new Array();
 
 var ChildDemo = "<p></p><table width='100%' class='insert-tab{2}'>" +
-             "<tbody><tr><th width='15%'><i class='require-red'>*</i>Domain: </th>" +
+            "<tbody><tr><th width='15%'><i class='require-red'>*</i>Domain: </th>" +
             "<td><input type='text' id='' value='{0}' size='85' name='keywords' class='common-text'></td>" +
             "</tr>" +
             "<tr><th width='15%'><i class='require-red'>*</i>Operator: </th><td>" +
-            "<button class='btn btn-primary btn6 mr10' onclick=\"WatchStatus('{1}')\">status</button>" +
-            "<button class='btn btn-primary btn6 mr10' onclick=\"StopTask('{1}')\">STOP</button>" +
+            "<label class='btn btn-primary btn6 mr10' >status</label>&nbsp;{3}&nbsp;" +
+            "<button class='btn btn-primary btn6 mr10' onclick=\"ShowLog('{1}')\">LOG</button>" +
+            "<button class='btn btn-primary btn6 mr10 require-red' onclick=\"StopTask('{1}')\">LOG</button>" +
             "</td></tr></tbody></table>";
 
 function setSelectUserNo(radioObj){
@@ -38,9 +39,9 @@ function AppendChildStatus(data, obj){
             return false;
         }
         if (value['success'] == 1){
-            obj.append(child.format(value['target'], value['taskid'], " red_table"));
+            obj.append(child.format(value['target'], value['taskid'], " red_table", value['status']));
         }else{
-            obj.after(child.format(value['target'], value['taskid'], ""));
+            obj.after(child.format(value['target'], value['taskid'], "", value['status']));
         }
         taskid_dict.push(value['taskid']);
     });
@@ -57,7 +58,7 @@ function ajaxGetjson(obj){
     });
 }
 
-function STOPALL() {
+function STOPTASK() {
     taskid = "";
     for (var i =0;i<taskid_dict.length;i++){
         taskid += taskid_dict[i] + ",";
@@ -91,4 +92,3 @@ function getRootDomain(domain){
     var repartten = /http[s]{0,1}:\/\/(.*?)\//i
     return domain.match(repartten)
 }
-
