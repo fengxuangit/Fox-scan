@@ -35,9 +35,6 @@ function AppendChildStatus(data, obj){
         $('#tasknum').html(data['number']);
     }
     $.each(data['data'], function(n, value){
-        if (taskid_dict.indexOf(value['taskid']) > -1){
-            return false;
-        }
         if (value['success'] == 1){
             obj.append(child.format(value['target'], value['taskid'], " red_table", value['status']));
         }else{
