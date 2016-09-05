@@ -100,21 +100,30 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
  可以看到我们刚才的POST注入已经扫描完成。
 
  ![successtask2](pics/showtask3.png)
+ 
+ 
+ 6 程序会自动有一个异步非阻塞追踪线程,如果发现有成功的目标,就会把目标和payload防到`successlist` 表中
 
 
 
 ##TODO 
  基本可以使用,但是还是有一些BUG。
+ 
  BUG:
  
    1. AJAX刷新有时候不能正确实时展示。
    2. 代理功能有时候在数据库不支持长链接的情况下会报错
    
  还有一些功能未能实现
+ 
  FEATURE:
 
  1. 点击LOG,可以查看扫描日志
  2. 添加PAYLOAD选项,可以查看到PAYLOAD
+ 
+##CHANGELOG
+
+* <a href="CHANGELOG.md">CHANGELOG</a>
 
 ##License
   

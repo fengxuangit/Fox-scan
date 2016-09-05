@@ -17,22 +17,12 @@ from models import MySQLHander
 
 HEADER={'Content-Type': 'application/json'}
 
-#定义MYSQL句併
-mysql = MySQLHander()
 
 #threading锁
 lock = threading.Lock()
 
 #taskid的队列
 taskid_thread_Dict=[]
-
-global writelist,blacklist,rootdomain,blackdomain
-
-def setting_init():
-    sql = "select writelist,blacklist,rootdomain,blackdomain from settings where id=1"
-    mysql.query(sql)
-    resource = mysql.fetchOneRow()
-    self.writelist,self.blacklist,self.rootdomain,self.blackdomain = list(resource)
 
 class SqlMapAction(object):
     def __init__(self):
@@ -83,11 +73,13 @@ class SqlMapAction(object):
             return False
 
     def update_settings(self, kwargs):
+        mysql = MySQLHander()
         sql = "update settings set server=\"{0}\", writelist=\"{1}\", blacklist=\"{2}\", proxyaddr=\"{3}\"," \
               "rootdomain=\"{4}\", blackdomain = \"{5}\" where id=1 ".format(kwargs.form['sqlmapaddr'], \
               kwargs.form['writelist'],kwargs.form['blacklist'],\
               kwargs.form['proxyaddr'], getrootdomain(kwargs.form['target']), getrootdomain(kwargs.url))
         mysql.update(sql)
+        mysql.close()
 
     def start_scan(self, taskid, target):
         server = self._get_server()
@@ -124,6 +116,7 @@ class SqlMapAction(object):
         t.start()
 
     def DeleteAllTask(self):
+        mysql = MySQLHander()
         sql = "select target,data from task where success=1"
         mysql.query(sql)
         slist = mysql.fetchAllRows()
@@ -132,18 +125,21 @@ class SqlMapAction(object):
             mysql.insert(sql)
         sql = "delete from task"
         mysql.update(sql)
+        mysql.close()
         print "[!] task schedule has been clear!"
 
 class Action:
     @staticmethod
     def SaveData(target, data):
         sql = ""
+        mysql = MySQLHander()
         if len(data['data']) == 0:
             sql = "update task set success=0 where target=\"{0}\"".format(target)
         else:
             sql = "update task set data=\"{0}\",success=1 where target=\"{1}\"".format(\
                 Tools.dict2base64(data['data'][0]['value'][0]['data']), target)
         mysql.update(sql)
+        mysql.close()
         return
 
     @staticmethod
@@ -152,10 +148,12 @@ class Action:
         :param taskid:
         :return: status,success
         '''
+        mysql = MySQLHander()
         sql = "select target,status,success from task where taskid=\"{0}\" ".format(taskid)
         mysql.query(sql)
         data = mysql.fetchOneRow()
         result = {"target":data[0], "status":data[1], "success":data[2]}
+        mysql.close()
         return result
 
     @staticmethod
@@ -173,10 +171,12 @@ class Action:
 
 class Spider(object):
     def __init__(self):
+        mysql = MySQLHander()
         sql = "select writelist,blacklist,rootdomain,blackdomain from settings where id=1"
         mysql.query(sql)
         resource = mysql.fetchOneRow()
         self.writelist,self.blacklist,self.rootdomain,self.blackdomain = list(resource)
+        mysql.close()
 
     #如果以http开头就返回整个链接，否则就拼接URL
     def geturl(self, url, href):
@@ -236,6 +236,7 @@ def Thread_Handle(taskid, target):
     url_status = "{0}/scan/{1}/status".format(server, taskid)
     url_log = "{0}/scan/{1}/log".format(server, taskid)
     url_data="{0}/scan/{1}/data".format(server, taskid)
+    mysql = MySQLHander()
     response_status = json.loads(requests.get(url_status,None).text)['status']
     while response_status != "terminated" and response_status!="deleting":
         time.sleep(2)
@@ -246,6 +247,7 @@ def Thread_Handle(taskid, target):
     if response_data==None:
         return False
     Action.SaveData(target, response_data)
+    mysql.close()
     lock.release()
     return True
 
@@ -282,18 +284,19 @@ def ProxyHander(request={}):
 #异步 定时查看数据库里成功的目标保存到successlist表中
 def Save_Success_Target():
     while True:
+        mysql = MySQLHander()
         sql = "select taskid,target,data from task where success=1 and action=0"
         mysql.query(sql)
         resource = mysql.fetchAllRows()
         if resource != None:
             for line in resource:
-                sql = "update successlist set target='{0}', data='{1}'".format(line[1], line[2])
-                mysql.update(sql)
+                sql = "insert into successlist(`target`, `data`) values (\"{0}\", \"{1}\")".format(line[1], line[2])
+                mysql.insert(sql)
                 sql = "update task set action=1 where taskid='{0}'".format(line[0])
                 mysql.update(sql)
                 print '[*] save success target {0}'.format(line[1])
-        else:
-            time.sleep(3)
+        mysql.close()
+        time.sleep(3)
 
 
 if __name__ == '__main__':
