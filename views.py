@@ -55,8 +55,8 @@ def action_startask():
         #线程启动任务，后台运行,没有join
         t = threading.Thread(target=Spider_Handle,args=(request.form['target'],options,))
         t.start()
-        # t = threading.Thread(target=Save_Success_Target,args=())
-        # t.start()
+        t = threading.Thread(target=Save_Success_Target,args=())
+        t.start()
         return redirect('/action/showtask')
         return "<html><script>alert('success add new target');window.location.href='/action/showtask';</script></html>"
     return "<html><script>alert('add new target Faild');history.back();</script></html>"
@@ -65,20 +65,18 @@ def action_startask():
 def action_showtask():
     data = {"number":0, "data":[]}
     if request.args.has_key('action') and request.args['action'] == "refresh":
+        mysql = MySQLHander()
         condition = ""
         sql = "select taskid,target,success,status from task where action=0"
         mysql.query(sql)
+        source = mysql.fetchAllRows()
         #获取正在扫描的URL
         num = 0
-        for line in mysql.fetchAllRows():
+        for line in source:
             num += 1
             data['data'].append({"taskid":line[0], "target":line[1], "success":line[2], "status":line[3]})
-            condition = "taskid = \"{0}\" and ".format(line[0])
-        #更新状态,下次就不取ACTION为1的了。
-        # if condition != "":
-        #     sql = "update task set action=1 where {0}".format(condition[:-4])
-        #     mysql.update(sql)
         data['number'] = num
+        mysql.close()
         return json.dumps(data)
     return render_template('showtask.html')
 
