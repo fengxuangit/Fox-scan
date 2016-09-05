@@ -35,6 +35,9 @@ function AppendChildStatus(data, obj){
         $('#tasknum').html(data['number']);
     }
     $.each(data['data'], function(n, value){
+        if (taskid_dict.indexOf(value['taskid']) > -1){
+            return false;
+        }
         if (value['success'] == 1){
             obj.append(child.format(value['target'], value['taskid'], " red_table", value['status']));
         }else{
@@ -60,7 +63,6 @@ function STOPTASK() {
     for (var i =0;i<taskid_dict.length;i++){
         taskid += taskid_dict[i] + ",";
     }
-    alert(taskid);
     $.post({
         url  : "/action/stoptask",
         data : {"taskidlist":tasid},
@@ -86,6 +88,20 @@ function ModeChange(obj) {
 
 
 function getRootDomain(domain){
-    var repartten = /http[s]{0,1}:\/\/(.*?)\//i
+    var repartten = /http[s]{0,1}:\/\/(.*?)\//i;
     return domain.match(repartten)
+}
+
+function ShowLog(taskid){
+    $.ajax({
+        url  : '/action/showdetail?taskid=' + taskid,
+        dataType : "json",
+        success : function (jdata) {
+            AppendChildStatus(jdata, obj);
+        }
+    });
+}
+
+function ShowLogDetail() {
+
 }
