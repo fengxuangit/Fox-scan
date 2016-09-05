@@ -63,7 +63,6 @@ function STOPTASK() {
     for (var i =0;i<taskid_dict.length;i++){
         taskid += taskid_dict[i] + ",";
     }
-    alert(taskid);
     $.post({
         url  : "/action/stoptask",
         data : {"taskidlist":tasid},
@@ -89,6 +88,20 @@ function ModeChange(obj) {
 
 
 function getRootDomain(domain){
-    var repartten = /http[s]{0,1}:\/\/(.*?)\//i
+    var repartten = /http[s]{0,1}:\/\/(.*?)\//i;
     return domain.match(repartten)
+}
+
+function ShowLog(taskid){
+    $.ajax({
+        url  : '/action/showdetail?taskid=' + taskid,
+        dataType : "json",
+        success : function (jdata) {
+            AppendChildStatus(jdata, obj);
+        }
+    });
+}
+
+function ShowLogDetail() {
+
 }
