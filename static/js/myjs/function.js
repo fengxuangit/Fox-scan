@@ -7,6 +7,9 @@ String.prototype.format=function(){
 
 var taskid_dict = new Array();
 
+var init_html = "<span><button class='minimal' onclick='STOPALL()'>STOPALL</button></span>" +
+        "<span><label>All Task Number: <strong id='tasknum'>{0}</strong></label></span>"
+
 var ChildDemo = "<p></p><table width='100%' class='insert-tab{2}'>" +
             "<tbody><tr><th width='15%'><i class='require-red'>*</i>Domain: </th>" +
             "<td><input type='text' id='' value='{0}' size='85' name='keywords' class='common-text'></td>" +
@@ -28,32 +31,44 @@ function setSelectUserNo(radioObj){
     }
 }
 
-function AppendChildStatus(data, obj){
+function AppendChildStatus(data, $obj){
     var child = ChildDemo.concat();
-    //当返回的任务数大于现在的数据时候才改变。
-    if (parseInt($('#tasknum').html()) < parseInt(data['number'])){
-        $('#tasknum').html(data['number']);
-    }
+    //当返回的任务数大于现在的数据时候才改变.
+    $('#tasknum').html(data['number']);
+    $obj.empty();
+    var targetlist = [];
     $.each(data['data'], function(n, value){
-        if (taskid_dict.indexOf(value['taskid']) > -1){
-            return false;
-        }
-        if (value['success'] == 1){
-            obj.append(child.format(value['target'], value['taskid'], " red_table", value['status']));
-        }else{
-            obj.after(child.format(value['target'], value['taskid'], "", value['status']));
-        }
-        taskid_dict.push(value['taskid']);
+        targetlist.push(value);
     });
+    targetlist.sort(function (a, b) {
+        if(a.success > b.success){
+            return -1;
+        }else if (a.success > b.success){
+            return 0;
+        }else{
+            return 1;
+        }
+    });
+    var str = "";
+    for (var i=0;i< targetlist.length; i++){
+//        $obj.append()
+        var value = targetlist[i];
+        if (value['success'] == 1){
+            str = child.format(value['target'], value['taskid'], " red_table", value['status']);
+        }else{
+            str = child.format(value['target'], value['taskid'], "", value['status']);
+        }
+        $obj.append(str);
+    }
 }
 
 
-function ajaxGetjson(obj){
+function ajaxGetjson($obj){
     $.ajax({
         url  : '/action/showtask?action=refresh',
         dataType : "json",
         success : function (jdata) {
-            AppendChildStatus(jdata, obj);
+            AppendChildStatus(jdata, $obj);
         }
     });
 }
@@ -97,11 +112,18 @@ function ShowLog(taskid){
         url  : '/action/showdetail?taskid=' + taskid,
         dataType : "json",
         success : function (jdata) {
-            AppendChildStatus(jdata, obj);
+            ShowLogDetail(jdata);
         }
     });
 }
 
-function ShowLogDetail() {
+function ShowLogDetail(jdata) {
 
+}
+
+function test1(){
+    $.each([1,2,3,4,5], function (key, value){
+        console.log(key + "  " + value);
+        return true;
+    });
 }

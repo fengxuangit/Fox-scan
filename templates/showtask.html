@@ -3,14 +3,9 @@
 {% include "left.html" %}
 <!--/sidebar-->
 <script type="text/javascript">
-    $().ready(function(){
-        var timer;
-{#        AppendChildStatus(data, $('#status'));#}
-    });
     setInterval(function(){
         ajaxGetjson($('#status'));
     }, 3000);
-
 </script>
     <div class="main-wrap">
         <div class="crumb-wrap">
@@ -22,9 +17,13 @@
                         <h1><i class="icon-font">&#xe00a;</i>Site information</h1>
                     </div>
                 <div class="result-content" style="height:570px;width:1024px; overflow:auto">
+                    <div id="showlog">
+
+                    </div>
+                    <span><button class="minimal" onclick="STOPALL()">STOPALL</button></span>
+                    <span><label>All Task Number: <strong id="tasknum">0</strong></label></span>
                     <div id="status">
-                        <span><button class="minimal" onclick="STOPALL()">STOPALL</button></span>
-                        <span><label>All Task Number: <strong id="tasknum">0</strong></label></span>
+
                    </div>
                 </div>
                </div>
