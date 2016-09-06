@@ -20,6 +20,8 @@ from requests.packages.urllib3.poolmanager import PoolManager
 SPIDER_HEADER = {"User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko)" \
                 " Version/6.0 Mobile/10A5376e Safari/8536.25"}
 
+JSON_HEADER={'Content-Type': 'application/json'}
+
 
 def getrootpath():
     path = os.path.split(os.path.realpath(__file__))[0]
@@ -67,6 +69,21 @@ class Tools:
     @staticmethod
     def base642json(string):
         return json.loads(base64.b64decode(string))
+
+    @staticmethod
+    def getjsondata(url, data=None):
+        if data == None:
+            try:
+                text = json.loads(requests.get(url,None, headers=JSON_HEADER).text)
+                return text
+            except:
+                return None
+        else:
+            try:
+                text = json.loads(requests.post(url,data=data, headers=JSON_HEADER).text)
+                return text
+            except:
+                return None
 
 
 if __name__ == '__main__':

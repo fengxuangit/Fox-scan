@@ -4,7 +4,7 @@
 import json
 import threading
 import multiprocessing
-
+import requests
 from flask import Flask,render_template,request,session,jsonify,redirect
 
 from libs.action import SqlMapAction,Spider_Handle,Save_Success_Target
@@ -66,7 +66,6 @@ def action_showtask():
     data = {"number":0, "data":[]}
     if request.args.has_key('action') and request.args['action'] == "refresh":
         mysql = MySQLHander()
-        condition = ""
         sql = "select taskid,target,success,status from task"
         mysql.query(sql)
         source = mysql.fetchAllRows()
@@ -78,6 +77,11 @@ def action_showtask():
         data['number'] = num
         mysql.close()
         return json.dumps(data)
+    if request.args.has_key('taskid') and request.args['taskid'] != "":
+        sqlaction = SqlMapAction()
+        server = sqlaction._get_server()
+        url = "{0}/scan/{1}/log".format(server, request.args['taskid'])
+        return json.dumps(Tools.getjsondata(url))
     return render_template('showtask.html')
 
 @app.route('/action/showdetail', methods=['GET'])

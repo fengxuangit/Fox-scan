@@ -18,7 +18,17 @@
                     </div>
                 <div class="result-content" style="height:570px;width:1024px; overflow:auto">
                     <div id="showlog">
-
+{#                    <input id="Button1" type="button" value="点击弹出层" onclick="ShowDiv('MyDiv','fade')" />#}
+                    <!--弹出层时背景层DIV-->
+                    <div id="shows" class="black_overlay">
+                    </div>
+                    <div id="hides" class="white_content">
+                        <div style="text-align: right; cursor: default; height: 40px;">
+                            <br />
+                            <span style="font-size: 16px;" onclick="CloseDiv('hides','shows')">关闭</span>
+                        </div>
+                        遮罩层。
+                    </div>
                     </div>
                     <span><button class="minimal" onclick="STOPALL()">STOPALL</button></span>
                     <span><label>All Task Number: <strong id="tasknum">0</strong></label></span>
