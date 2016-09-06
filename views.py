@@ -67,7 +67,7 @@ def action_showtask():
     if request.args.has_key('action') and request.args['action'] == "refresh":
         mysql = MySQLHander()
         condition = ""
-        sql = "select taskid,target,success,status from task where action=0"
+        sql = "select taskid,target,success,status from task"
         mysql.query(sql)
         source = mysql.fetchAllRows()
         #获取正在扫描的URL
@@ -80,19 +80,16 @@ def action_showtask():
         return json.dumps(data)
     return render_template('showtask.html')
 
-@app.route('/action/showjson', methods=['GET'])
+@app.route('/action/showdetail', methods=['GET'])
 def action_showjson():
-    data = {"number":0, "data":[]}
-    condition = ""
-    sql = "select taskid,target,success,status from task where action=0"
-    mysql.query(sql)
-    #获取正在扫描的URL
-    num = 0
-    for line in mysql.fetchAllRows():
-        num += 1
-        data['data'].append({"taskid":line[0], "target":line[1], "success":line[2], "status":line[3]})
-        condition = "taskid = \"{0}\" and ".format(line[0])
-    data['number'] = num
+    data = {"target":"", "data":"", "success":0, "status":"running"}
+    if request.args.has_key('taskid'):
+        taskid = request.args['taskid']
+        sql = "select target,data,success,status where taskid = '{0}'".format(taskid)
+        mysql = MySQLHander()
+        mysql.query(sql)
+        resource = mysql.fetchOneRow()
+        data = {"target":resource[0], "data":resource[1], "success":resource[2], "status":resource[4]}
     return json.dumps(data)
 
 @app.route('/action/stoptask')
