@@ -107,23 +107,3 @@ function getRootDomain(domain){
     return domain.match(repartten)
 }
 
-function ShowLog(taskid){
-    $.ajax({
-        url  : '/action/showdetail?taskid=' + taskid,
-        dataType : "json",
-        success : function (jdata) {
-            ShowLogDetail(jdata);
-        }
-    });
-}
-
-function ShowLogDetail(jdata) {
-
-}
-
-function test1(){
-    $.each([1,2,3,4,5], function (key, value){
-        console.log(key + "  " + value);
-        return true;
-    });
-}

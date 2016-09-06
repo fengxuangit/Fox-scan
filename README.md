@@ -111,15 +111,16 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
  
  BUG:
  
-   1. AJAX刷新有时候不能正确实时展示。
-   2. 代理功能有时候在数据库不支持长链接的情况下会报错
+ 1. AJAX刷新有时候不能正确实时展示。(fixed)
+ 2. 代理功能有时候在数据库不支持长链接的情况下会报错(fixed)
    
  还有一些功能未能实现
  
  FEATURE:
 
- 1. 点击LOG,可以查看扫描日志
+ 1. 点击LOG,可以查看扫描日志 (done)
  2. 添加PAYLOAD选项,可以查看到PAYLOAD
+ 3. 添加Command按钮,可以生成注入成功的sqlmap命令
  
 ##CHANGELOG
 
