@@ -101,6 +101,9 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
 
  ![successtask2](pics/showtask3.png)
  
+ 点击LOG按钮可以查看扫描日志。
+ ![showlog](pics/showlog1.png)
+ 
  
  6 程序会自动有一个异步非阻塞追踪线程,如果发现有成功的目标,就会把目标和payload防到`successlist` 表中
 
