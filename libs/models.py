@@ -3,6 +3,7 @@
 
 import os
 import MySQLdb
+import sys
 
 from func import XMLDOM
 
@@ -11,7 +12,10 @@ class MySQLHander(object):
         xml = XMLDOM()
         host     = xml.GetElementByName('mysql/host').strip()
         username = xml.GetElementByName('mysql/username').strip()
-        password = xml.GetElementByName('mysql/password').strip()
+        if xml.GetElementByName('mysql/password') == None:
+            password = ""
+        else:
+            password = xml.GetElementByName('mysql/password').strip()
         port     = xml.GetElementByName('mysql/port').strip()
         database = xml.GetElementByName('mysql/database').strip()
         charset  = xml.GetElementByName('mysql/charset').strip()
@@ -26,15 +30,7 @@ class MySQLHander(object):
             self.error_code = e.args[0]
             error_msg = 'MySQL error! ', e.args[0], e.args[1]
             print error_msg
-              
-            if self._timecount < self._TIMEOUT:
-                interval = 5
-                self._timecount += interval
-                time.sleep(interval)
-                return self.__init__(dbconfig)
-            else:
-                raise Exception(error_msg)
-            
+            sys.exit()
         self._cur = self._conn.cursor()
         self._instance = MySQLdb
 
