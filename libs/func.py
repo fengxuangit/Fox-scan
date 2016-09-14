@@ -24,8 +24,7 @@ JSON_HEADER={'Content-Type': 'application/json'}
 
 
 def getrootpath():
-    path = os.path.split(os.path.realpath(__file__))[0]
-    return path[:path.rfind("/")]
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
 def getrootdomain(domain):
     pattern = re.compile('http[s]{0,1}://(.*?)/')
@@ -37,7 +36,7 @@ def getrootdomain(domain):
 
 class XMLDOM(object):
     def __init__(self):
-        xml = ET.parse("{0}/config.xml".format(getrootpath()))
+        xml = ET.parse("{0}{1}config.xml".format(getrootpath(), os.path.sep))
         self.tree = xml.getroot()
 
     def GetElementByName(self, name):

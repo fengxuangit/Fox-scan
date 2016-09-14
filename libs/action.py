@@ -9,7 +9,6 @@ import urllib2
 import base64
 import threading
 import multiprocessing
-import ipdb
 from urlparse import urlparse
 from func import XMLDOM,Tools,SPIDER_HEADER,getrootdomain
 from bs4 import BeautifulSoup
