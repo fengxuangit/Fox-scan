@@ -103,6 +103,7 @@ class SqlMapAction(object):
             server = self._get_server()
             url = "{0}/scan/{1}/stop".format(server, taskid)
             response = json.loads(requests.get(url,None).text)
+            print "-----------\n",response
             if requests['success'] == True:
                 print "[!] stop task {0} ok!".format(taskid)
             else:
@@ -180,6 +181,8 @@ class Spider(object):
     #如果以http开头就返回整个链接，否则就拼接URL
     def geturl(self, url, href):
         url = urlparse(url)
+        if href.startswith('http'):
+            return href
         return "{0}://{1}/{2}/{3}".format(url.scheme, url.netloc, url.path, href)
 
     def SpiderGetLink(self, url):
@@ -191,6 +194,7 @@ class Spider(object):
             #将a标签中的值挨个取出来
             href = a['href']
             domain = self.geturl(url, href)
+            import ipdb;idpb.set_trace()
             data = self.Analysis(domain)
             if data != None:
                 result.add(data)
@@ -206,6 +210,7 @@ class Spider(object):
                 return href
             return None
         if url.startswith('http'):
+            #判断是否同欲
             if fuckotherdomain(url, self.rootdomain, self.blackdomain) != None:
                 pass
             else:
@@ -280,7 +285,7 @@ def ProxyHander(request={}):
         saction.Set_Options(taskid=taskid, options=options)
         saction.start_scan(taskid, url)
 
-#异步 定时查看数据库里成功的目标保存到successlist表中
+#同步非阻塞 定时查看数据库里成功的目标保存到successlist表中
 def Save_Success_Target():
     while True:
         mysql = MySQLHander()

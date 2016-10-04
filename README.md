@@ -108,7 +108,44 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
  6 程序会自动有一个异步非阻塞追踪线程,如果发现有成功的目标,就会把目标和payload防到`successlist` 表中
 
 
+ 7 HTTPS资源获取 (2016/10/04)
+ 
+ 这里使用libs/wyproxy.py脚本，这里是根据猪猪侠的代理工具简化开发了一下<a href="https://github.com/ring04h/wyproxy">https://github.com/ring04h/wyproxy</a>
+ 
+ 在此感谢猪哥的轮子
+ 
+ 1. Mac OS X 安装配置 SSL 证书 并信任
+ 
+ 	`$ wget https://raw.githubusercontent.com/ring04h/wyproxy/master/ssl/mitmproxy-ca.pem`
+ 	
+ 在Finder中双击运行mitmproxy-ca.pem
 
+ 进入钥匙串访问工具, 选择mitmproxy的证书 
+ 
+ ![key_manage](./pics/key_manager.png)
+
+  选择始终信任该证书, 即可生效, 便能成功捕捉所有HTTPS的流量 
+  
+ ![key_trust](./pics/key_trust.png)
+ 
+ 运行libs/wyproxy.py
+ 
+	 	python libs/wyproxy.py -p 8888
+ 
+ ![https_cmd](./pics/https_cmd.png)
+ 
+ 浏览器上添加公钥信任
+ 
+ ![https_web](./pics/https1.png)
+ 
+ 后台就会检测https的网页了
+ 
+ ![https_scan](./pics/https_showtask.png)
+
+ 
+ 
+ 
+  
 ##TODO 
  基本可以使用,但是还是有一些BUG。
  
@@ -122,7 +159,7 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
  FEATURE:
 
  1. 点击LOG,可以查看扫描日志 (done)
- 2. 添加PAYLOAD选项,可以查看到PAYLOAD
+ 2. 添加PAYLOAD选项,可以查看到PAYLOAD(done)
  3. 添加Command按钮,可以生成注入成功的sqlmap命令
  
 ##CHANGELOG

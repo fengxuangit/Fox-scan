@@ -7,7 +7,7 @@ String.prototype.format=function(){
 
 var taskid_dict = new Array();
 
-var init_html = "<span><button class='minimal' onclick='STOPALL()'>STOPALL</button></span>" +
+var init_html = "<span><button class='minimal' onclick='STOPTASK()'>STOPALL</button></span>" +
         "<span><label>All Task Number: <strong id='tasknum'>{0}</strong></label></span>"
 
 var ChildDemo = "<p></p><table width='100%' class='insert-tab{2}'>" +
@@ -16,8 +16,9 @@ var ChildDemo = "<p></p><table width='100%' class='insert-tab{2}'>" +
             "</tr>" +
             "<tr><th width='15%'><i class='require-red'>*</i>Operator: </th><td>" +
             "<label class='btn btn-primary btn6 mr10' >status</label>&nbsp;{3}&nbsp;" +
+            "<button class='btn btn-primary btn6 mr10' onclick=\"STOPTASK('{1}')\">STOP</button>" +
             "<button class='btn btn-primary btn6 mr10' onclick=\"ShowLog('{1}')\">LOG</button>" +
-            "<button class='btn btn-primary btn6 mr10 require-red' onclick=\"StopTask('{1}')\">LOG</button>" +
+            "<button class='btn btn-primary btn6 mr10 require-red' onclick=\"ShowPayload('{1}')\">Payload</button>" +
             "</td></tr></tbody></table>";
 
 function setSelectUserNo(radioObj){
@@ -35,6 +36,8 @@ function AppendChildStatus(data, $obj){
     var child = ChildDemo.concat();
     //当返回的任务数大于现在的数据时候才改变.
     $('#tasknum').html(data['number']);
+    if (taskid_dict.indexOf(data['taskid']) == -1)
+        taskid_dict.push(data['taskid']);
     $obj.empty();
     var targetlist = [];
     $.each(data['data'], function(n, value){
@@ -73,21 +76,18 @@ function ajaxGetjson($obj){
     });
 }
 
-function STOPTASK() {
-    taskid = "";
-    for (var i =0;i<taskid_dict.length;i++){
-        taskid += taskid_dict[i] + ",";
-    }
-    $.post({
-        url  : "/action/stoptask",
-        data : {"taskidlist":tasid},
-        success : function(result){
-            data = JSON.parse(result);
-            if (data['status'] == true){
-                alert("ok");
-            }
+function STOPTASK(taskid="") {
+    if (taskid == ""){
+        for (var i =0;i<taskid_dict.length;i++){
+            taskid += taskid_dict[i] + ",";
         }
-    })
+    }
+    $.ajax({
+        url  : '/action/stoptask?taskidlist=' + taskid,
+        dataType : "json",
+        success : function (jdata) {
+        }
+    });
 }
 
 function ModeChange(obj) {
@@ -106,4 +106,3 @@ function getRootDomain(domain){
     var repartten = /http[s]{0,1}:\/\/(.*?)\//i;
     return domain.match(repartten)
 }
-
