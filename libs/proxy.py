@@ -57,8 +57,10 @@ class BackProxyHandle(threading.Thread):
         while self.queue.empty() == False:
             print "[*] Waiting for Queue..."
             request = self.queue.get()
-            print "[*] Process Queue"
+            if request['uri'].find('127.0.0.1')>=0:
+                continue
             print request['uri']
+            print "[*] Process Queue"
             ProxyHander(request)
 
 def get_proxy(url):

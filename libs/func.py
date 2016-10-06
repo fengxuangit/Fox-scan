@@ -27,11 +27,7 @@ def getrootpath():
     return os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
 def getrootdomain(domain):
-    pattern = re.compile('http[s]{0,1}://(.*?)/')
-    flag = pattern.search(domain)
-    if flag:
-        return flag.groups()[0]
-    return None
+    return urlparse(domain).netloc
 
 
 class XMLDOM(object):

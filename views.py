@@ -77,11 +77,17 @@ def action_showtask():
         data['number'] = num
         mysql.close()
         return json.dumps(data)
-    if request.args.has_key('taskid') and request.args['taskid'] != "":
-        sqlaction = SqlMapAction()
-        server = sqlaction._get_server()
-        url = "{0}/scan/{1}/log".format(server, request.args['taskid'])
-        return json.dumps(Tools.getjsondata(url))
+    if request.args.has_key('type'):
+        if request.args['type'] == "log":
+            sqlaction = SqlMapAction()
+            server = sqlaction._get_server()
+            url = "{0}/scan/{1}/log".format(server, request.args['taskid'])
+            return json.dumps(Tools.getjsondata(url))
+        if request.args['type'] == "payload":
+            sqlaction = SqlMapAction()
+            server = sqlaction._get_server()
+            url = "{0}/scan/{1}/data".format(server, request.args['taskid'])
+            return json.dumps(Tools.getjsondata(url))
     return render_template('showtask.html')
 
 @app.route('/action/showdetail', methods=['GET'])
@@ -96,6 +102,7 @@ def action_showjson():
         data = {"target":resource[0], "data":resource[1], "success":resource[2], "status":resource[4]}
     return json.dumps(data)
 
+
 @app.route('/action/stoptask')
 def action_status():
     if request.args['taskidlist'] != "":
@@ -104,7 +111,8 @@ def action_status():
             taskidlist = request.args['taskidlist'].split(',')
         else:
             taskidlist.append(request.args['taskidlist'])
-    return json.dumps({"status":SqlMap.StopTask(taskidlist)})
+        return json.dumps({"status":SqlMap.StopTask(taskidlist)})
+    return json.dumps({"error":"no taskid"})
 
 
 if __name__ == '__main__':
