@@ -117,7 +117,7 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
  
  1. Mac OS X 安装配置 SSL 证书 并信任
  
- 	`$ wget https://raw.githubusercontent.com/fengxuangit/foxscan/master/ssl/mitmproxy-ca.pem`
+ 	`$ wget https://raw.githubusercontent.com/fengxuangit/Fox-scan/master/libs/ssl/mitmproxy-ca.pem`
  	
  在Finder中双击运行mitmproxy-ca.pem
 
