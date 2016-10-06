@@ -37,7 +37,7 @@ class BackProxyHandle(threading.Thread):
             print "[*] Process Queue"
             ProxyHander(request)
 
-save_content = False
+save_content = True
 
 http_mimes = ['text', 'image', 'application', 'video', 'message', 'audio']
 
@@ -406,6 +406,7 @@ class WYProxy(flow.FlowMaster):
                 proxy_dict['uri'] = data['url']
                 proxy_dict['method'] = data['method']
                 proxy_dict['request_header'] = data['request_header']
+                proxy_dict['body'] = data['request_content']
                 self.queue.put(proxy_dict)
                 BackProxyHandle(self.queue).start()
             f.reply()

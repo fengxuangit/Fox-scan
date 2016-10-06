@@ -12,6 +12,7 @@ sqlmap
 python 2.7 
 Flask
 multiprocessing
+mitmproxy
 tornado
 requests
 BeautifulSoup 4.2.0
@@ -110,13 +111,13 @@ sqlmap标签为你的sqlmap地址,typelist类型设置为黑名单和白名单�
 
  7 HTTPS资源获取 (2016/10/04)
  
- 这里使用libs/wyproxy.py脚本，这里是根据猪猪侠的代理工具简化开发了一下<a href="https://github.com/ring04h/wyproxy">https://github.com/ring04h/wyproxy</a>
+ 这里使用libs/wyproxy.py脚本，这里是借鉴猪猪侠的代理工具简化开发了一下<a href="https://github.com/ring04h/wyproxy">https://github.com/ring04h/wyproxy</a>
  
  在此感谢猪哥的轮子
  
  1. Mac OS X 安装配置 SSL 证书 并信任
  
- 	`$ wget https://raw.githubusercontent.com/ring04h/wyproxy/master/ssl/mitmproxy-ca.pem`
+ 	`$ wget https://raw.githubusercontent.com/fengxuangit/foxscan/master/ssl/mitmproxy-ca.pem`
  	
  在Finder中双击运行mitmproxy-ca.pem
 

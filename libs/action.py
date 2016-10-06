@@ -194,7 +194,6 @@ class Spider(object):
             #将a标签中的值挨个取出来
             href = a['href']
             domain = self.geturl(url, href)
-            import ipdb;idpb.set_trace()
             data = self.Analysis(domain)
             if data != None:
                 result.add(data)
